@@ -8,7 +8,7 @@ import argparse
 from os.path import exists
 
 from utils.bcolors import *
-from utils.executable import *
+from utils.binaryfile import *
 from constants import *
 
 
@@ -75,11 +75,12 @@ def get_BinaryFile() -> BinaryFileFactory:
             if formatInfo is not None:
                 if args.verbose:
                     print(
-                        "\t{}LOG{}:Determined {} format is: {}".format(
+                        '\t{}LOG{}:Determined {} format is: "{}" ({})'.format(
                             colors.OKGREEN,
                             colors.ENDC,
                             args.binary,
                             formatInfo["name"],
+                            formatInfo["abbr"],
                         )
                     )
             else:
@@ -103,11 +104,8 @@ def polyhash():
     bfFactory = get_BinaryFile()
     bf = bfFactory.get_binaryfile(args.binary)
 
-    print(
-        "\t{}DEBUG:{}BinaryFile bf.get_format_info --> {}".format(
-            colors.HEADER, colors.ENDC, bf.get_format_info()
-        )
-    )
+    # Retrieve BinaryFile entry point to start analysis
+    bf.display_format_info()
 
 
 if __name__ == "__main__":

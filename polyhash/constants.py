@@ -1,4 +1,4 @@
-from utils.executable import *
+from utils.binaryfile import *
 
 FILE_FORMAT_INFO = [
     {
