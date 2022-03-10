@@ -10,4 +10,6 @@ DOS_FORMAT = {
 
 ELF_FORMAT = {
     "e_type": 4,
+    "e_machine": 5,
+    "e_entrypoint": 24,
 }

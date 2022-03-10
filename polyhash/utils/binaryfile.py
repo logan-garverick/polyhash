@@ -52,22 +52,58 @@ class ELF(BinaryFile):
         self.entrypoint = self._find_entry_point()
 
     def _find_entry_point(self) -> int:
-        pass
+        with open(self.path, "rb") as bin:
+
+            # Seek to e_entrypoint in Elf32_Ehdr
+            bin.seek(ELF_FORMAT["e_entrypoint"], 1)
+
+            if self.endianness == "LE":
+                if self.machineAddressing == "32-bit":
+                    (entrypoint,) = struct.unpack("<L", bin.read(4))
+                else:
+                    (entrypoint,) = struct.unpack("<Q", bin.read(8))
+            else:
+                if self.machineAddressing == "32-bit":
+                    entrypoint = int(bin.read(4), 16)
+                else:
+                    entrypoint = int(bin.read(8), 16)
+        return entrypoint
 
     def _find_addressing(self) -> str:
-        pass
+        with open(self.path, "rb") as bin:
+            bin.seek(ELF_FORMAT["e_type"], 1)
+            (typeFlag,) = struct.unpack("<B", bin.read(1))
+            if typeFlag == 1:
+                return "32-bit"
+            else:
+                return "64-bit"
 
     def _find_endianness(self) -> str:
-        pass
+        with open(self.path, "rb") as bin:
+            bin.seek(ELF_FORMAT["e_machine"], 1)
+            (endiannessFlag,) = struct.unpack("<B", bin.read(1))
+            if endiannessFlag == 1:
+                return "LE"
+            else:
+                return "BE"
 
     def get_entry_point(self):
         return self.entrypoint
 
     def get_format_info(self) -> dict:
-        pass
+        return {
+            "path": self.path,
+            "addressing": self.machineAddressing,
+            "entrypoint": self.entrypoint,
+        }
 
     def display_format_info(self) -> None:
-        pass
+        print(
+            f"\tPath:\t{self.path}\n"
+            + f"\tAddressing:\t{self.machineAddressing}\n"
+            + f"\tEndianness:\t{self.endianness}\n"
+            + f"\tEntry Point:\t{hex(self.entrypoint)}"
+        )
 
 
 class DOS(BinaryFile):
@@ -86,7 +122,7 @@ class DOS(BinaryFile):
 
             # Find e_lfanew pointer to _IMAGE_NT_HEADERS
             bin.seek(DOS_FORMAT["e_lfanew"], 1)
-            (e_lfanew_ptr,) = struct.unpack("<l", bin.read(4))
+            (e_lfanew_ptr,) = struct.unpack("<L", bin.read(4))
 
             # Get AddressOfEntryPoint in _IMAGE_OPTIONAL_HEADER
             bin.seek(
@@ -96,7 +132,7 @@ class DOS(BinaryFile):
 
             if self.endianness == "LE":
                 if self.machineAddressing == "32-bit":
-                    (entrypoint,) = struct.unpack("<l", bin.read(4))
+                    (entrypoint,) = struct.unpack("<L", bin.read(4))
                 else:
                     (entrypoint,) = struct.unpack("<Q", bin.read(8))
             else:
@@ -113,7 +149,7 @@ class DOS(BinaryFile):
 
             # Find e_lfanew pointer to _IMAGE_NT_HEADERS
             bin.seek(DOS_FORMAT["e_lfanew"], 1)
-            (e_lfanew_ptr,) = struct.unpack("<l", bin.read(4))
+            (e_lfanew_ptr,) = struct.unpack("<L", bin.read(4))
 
             # Get Addressing (32 or 64 bit) in _IMAGE_FILE_HEADER
             bin.seek(e_lfanew_ptr + DOS_FORMAT["Machine"], 0)
