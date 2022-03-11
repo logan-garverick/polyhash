@@ -104,8 +104,17 @@ def polyhash():
     bfFactory = get_BinaryFile()
     bf = bfFactory.get_binaryfile(args.binary)
 
-    # Retrieve BinaryFile entry point to start analysis
-    bf.display_format_info()
+    if args.verbose:
+        print(
+            f"\t{colors.OKGREEN}LOG{colors.ENDC}: -----Generated BinaryFile Information----- "
+        )
+        bf.display_format_info()
+        print(f"\t     ------------------------------------------ ")
+
+    # Retrieve BinaryFile file info to start analysis
+    bf.get_format_info()
+
+    # Attempt to decompile instructions
 
 
 if __name__ == "__main__":

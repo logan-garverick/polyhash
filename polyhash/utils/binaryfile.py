@@ -14,14 +14,14 @@ class BinaryFile:
         self.path = None
         self.endianness = None
         self.entrypoint = None
-        self.machineAddressing = None
+        self.bitness = None
 
     @abstractmethod
     def _find_entry_point(self) -> int:
         """This method will find the entry point in the binary file based on its format"""
 
     @abstractmethod
-    def _find_addressing(self) -> str:
+    def _find_bitness(self) -> str:
         """This method will find the machine addressing (32 or 64 bit) in the binary file based on its format"""
 
     @abstractmethod
@@ -29,7 +29,7 @@ class BinaryFile:
         """This method will find the endianess in the binary file based on its format"""
 
     @abstractmethod
-    def get_entry_point(self):
+    def get_entry_point(self) -> int:
         """This method will returned the entry point of the binary"""
 
     @abstractmethod
@@ -48,7 +48,7 @@ class ELF(BinaryFile):
         super().__init__()
         self.path = path
         self.endianness = self._find_endianness()
-        self.machineAddressing = self._find_addressing()
+        self.bitness = self._find_bitness()
         self.entrypoint = self._find_entry_point()
 
     def _find_entry_point(self) -> int:
@@ -58,25 +58,25 @@ class ELF(BinaryFile):
             bin.seek(ELF_FORMAT["e_entrypoint"], 1)
 
             if self.endianness == "LE":
-                if self.machineAddressing == "32-bit":
+                if self.bitness == 32:
                     (entrypoint,) = struct.unpack("<L", bin.read(4))
                 else:
                     (entrypoint,) = struct.unpack("<Q", bin.read(8))
             else:
-                if self.machineAddressing == "32-bit":
+                if self.bitness == 32:
                     entrypoint = int(bin.read(4), 16)
                 else:
                     entrypoint = int(bin.read(8), 16)
         return entrypoint
 
-    def _find_addressing(self) -> str:
+    def _find_bitness(self) -> int:
         with open(self.path, "rb") as bin:
             bin.seek(ELF_FORMAT["e_type"], 1)
             (typeFlag,) = struct.unpack("<B", bin.read(1))
             if typeFlag == 1:
-                return "32-bit"
+                return 32
             else:
-                return "64-bit"
+                return 64
 
     def _find_endianness(self) -> str:
         with open(self.path, "rb") as bin:
@@ -87,22 +87,23 @@ class ELF(BinaryFile):
             else:
                 return "BE"
 
-    def get_entry_point(self):
+    def get_entry_point(self) -> int:
         return self.entrypoint
 
     def get_format_info(self) -> dict:
         return {
             "path": self.path,
-            "addressing": self.machineAddressing,
+            "bitness": self.bitness,
+            "endianness": self.endianness,
             "entrypoint": self.entrypoint,
         }
 
     def display_format_info(self) -> None:
         print(
-            f"\tPath:\t{self.path}\n"
-            + f"\tAddressing:\t{self.machineAddressing}\n"
-            + f"\tEndianness:\t{self.endianness}\n"
-            + f"\tEntry Point:\t{hex(self.entrypoint)}"
+            f"\t\tPath:\t\t{self.path}\n"
+            + f"\t\tBitness:\t{self.bitness}\n"
+            + f"\t\tEndianness:\t{self.endianness}\n"
+            + f"\t\tEntry Point:\t{hex(self.entrypoint)}"
         )
 
 
@@ -113,7 +114,7 @@ class DOS(BinaryFile):
         super().__init__()
         self.path = path
         self.endianness = self._find_endianness()
-        self.machineAddressing = self._find_addressing()
+        self.bitness = self._find_bitness()
         self.entrypoint = self._find_entry_point()
 
     def _find_entry_point(self) -> int:
@@ -131,19 +132,19 @@ class DOS(BinaryFile):
             )
 
             if self.endianness == "LE":
-                if self.machineAddressing == "32-bit":
+                if self.bitness == 32:
                     (entrypoint,) = struct.unpack("<L", bin.read(4))
                 else:
                     (entrypoint,) = struct.unpack("<Q", bin.read(8))
             else:
-                if self.machineAddressing == "32-bit":
+                if self.bitness == 32:
                     entrypoint = int(bin.read(4), 16)
                 else:
                     entrypoint = int(bin.read(8), 16)
 
         return entrypoint
 
-    def _find_addressing(self) -> str:
+    def _find_bitness(self) -> str:
         # Open the file for reading
         with open(self.path, "rb") as bin:
 
@@ -167,28 +168,30 @@ class DOS(BinaryFile):
     def _find_endianness(self) -> str:
         return "LE"
 
-    def get_entry_point(self):
+    def get_entry_point(self) -> int:
         return self.entrypoint
 
     def get_format_info(self) -> dict:
         return {
             "path": self.path,
-            "addressing": self.machineAddressing,
+            "bitness": self.bitness,
+            "endianness": self.endianness,
             "entrypoint": self.entrypoint,
         }
 
     def display_format_info(self) -> None:
         print(
-            f"\tPath:\t{self.path}\n"
-            + f"\tAddressing:\t{self.machineAddressing}\n"
-            + f"\tEndianness:\t{self.endianness}\n"
-            + f"\tEntry Point:\t{hex(self.entrypoint)}"
+            f"\t\tPath:\t\t{self.path}\n"
+            + f"\t\tBitness:\t{self.bitness}\n"
+            + f"\t\tEndianness:\t{self.endianness}\n"
+            + f"\t\tEntry Point:\t{hex(self.entrypoint)}"
         )
 
 
 class BinaryFileFactory(ABC):
     """Factory that generates an BinaryFile object based on the file format signature discovered"""
 
+    @abstractmethod
     def get_binaryfile(self, path) -> BinaryFile:
         """Returns a new BinaryFile instance"""
 
