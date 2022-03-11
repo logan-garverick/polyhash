@@ -1,2 +1,2 @@
-# polyhash
-An x86-64 decompiler for common file types implemented in python used to generate possible hash signatures of polymorphic malware.
+# PolyHash
+An x86-64 binary analyzer for common file types used to generate a list of possible hash signatures of polymorphic malware.
