@@ -131,14 +131,18 @@ def polyhash():
     formatter = Formatter(FormatterSyntax.INTEL)
     formatter.digit_separator = "`"
     formatter.first_operand_char_index = 10
-    print(f"\t{colors.HEADER}     ----- DEBUG: Decoded Instruction ----- {colors.ENDC}")
+    print(
+        f"\t{colors.HEADER}     ------- DEBUG: Decoded Instruction ------- {colors.ENDC}"
+    )
     for instr in decoder:
         disasm = formatter.format(instr)
         print(f"\t\t{disasm}")
 
         counter += 1
     print(f"\n\t\tPolyHash decoded {colors.BOLD}{counter}{colors.ENDC} instructions")
-    print(f"\t{colors.HEADER}     -------------------------------------- {colors.ENDC}")
+    print(
+        f"\t{colors.HEADER}     ------------------------------------------ {colors.ENDC}"
+    )
 
 
 if __name__ == "__main__":

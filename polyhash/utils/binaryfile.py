@@ -14,7 +14,7 @@ class BinaryFile:
         self.path = None
         self.endianness = None
         self.entrypoint = None
-        self.textSegLen = None
+        self.textSegLen = 0
         self.bitness = None
 
     @abstractmethod
