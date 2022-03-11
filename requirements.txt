@@ -1,5 +1,6 @@
 black==22.1.0
 click==8.0.4
+iced-x86==1.17.0
 mypy-extensions==0.4.3
 pathspec==0.9.0
 platformdirs==2.5.1

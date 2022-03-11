@@ -5,16 +5,15 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "PolyHash Demo",
+            "name": "64-bit ELF",
             "type": "python",
             "python": "${workspaceFolder}/.venv/bin/python",
             "request": "launch",
             "program": "${workspaceFolder}/polyhash/polyhash.py",
             "console": "integratedTerminal",
             "args": [
-                "-o",
-                "./demo_file.out",
-                "demo_file"
+                "-v",
+                "/home/lgarv/Downloads/hello"
             ],
             "justMyCode": true
         }

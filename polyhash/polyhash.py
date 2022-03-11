@@ -10,6 +10,7 @@ from os.path import exists
 from utils.bcolors import *
 from utils.binaryfile import *
 from constants import *
+from iced_x86 import *
 
 
 def configure_parser():
@@ -100,6 +101,8 @@ def get_BinaryFile() -> BinaryFileFactory:
 
 def polyhash():
 
+    fileContent = None
+
     # Retrieve BinaryFile instance of binary
     bfFactory = get_BinaryFile()
     bf = bfFactory.get_binaryfile(args.binary)
@@ -112,9 +115,30 @@ def polyhash():
         print(f"\t     ------------------------------------------ ")
 
     # Retrieve BinaryFile file info to start analysis
-    bf.get_format_info()
+    binaryInfo = bf.get_format_info()
+
+    # Read the content of the binary file to give to decompiler
+    with open(binaryInfo["path"], "rb") as f:
+        f.seek(binaryInfo["entrypoint"])
+        fileContent = f.read(binaryInfo["textSegLen"])
 
     # Attempt to decompile instructions
+    decoder = Decoder(binaryInfo["bitness"], fileContent, ip=binaryInfo["entrypoint"])
+
+    # Debug Info here
+    counter = 0
+
+    formatter = Formatter(FormatterSyntax.INTEL)
+    formatter.digit_separator = "`"
+    formatter.first_operand_char_index = 10
+    print(f"\t{colors.HEADER}     ----- DEBUG: Decoded Instruction ----- {colors.ENDC}")
+    for instr in decoder:
+        disasm = formatter.format(instr)
+        print(f"\t\t{disasm}")
+
+        counter += 1
+    print(f"\n\t\tPolyHash decoded {colors.BOLD}{counter}{colors.ENDC} instructions")
+    print(f"\t{colors.HEADER}     -------------------------------------- {colors.ENDC}")
 
 
 if __name__ == "__main__":
@@ -124,6 +148,5 @@ if __name__ == "__main__":
     )
     configure_parser()
     args = parser.parse_args()
-    print(f"\t{colors.HEADER}DEBUG:{colors.ENDC}args --> {args}")
     # Begin analysis
     polyhash()
