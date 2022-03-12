@@ -22,7 +22,7 @@ class BinaryFile:
         """This method will find the entry point in the binary file based on its format"""
 
     @abstractmethod
-    def _find_bitness(self) -> str:
+    def _find_bitness(self) -> int:
         """This method will find the machine addressing (32 or 64 bit) in the binary file based on its format"""
 
     @abstractmethod
@@ -60,25 +60,28 @@ class ELF(BinaryFile):
     def _find_entry_point(self) -> int:
         with open(self.path, "rb") as bin:
 
+            # Retrieve bitness specific offsets
+            if self.bitness == 32:
+                bitnessValues = ELF_FORMAT[32]
+            else:
+                bitnessValues = ELF_FORMAT[64]
+
             # Seek to e_entrypoint in Elf32_Ehdr
             bin.seek(ELF_FORMAT["e_entrypoint"], 1)
 
             if self.endianness == "LE":
-                if self.bitness == 32:
-                    (entrypoint,) = struct.unpack("<L", bin.read(4))
-                else:
-                    (entrypoint,) = struct.unpack("<Q", bin.read(8))
+                (entrypoint,) = struct.unpack(
+                    bitnessValues["Addr_STRUCT"], bin.read(bitnessValues["Addr_SIZE"])
+                )
             else:
-                if self.bitness == 32:
-                    entrypoint = int(bin.read(4), 16)
-                else:
-                    entrypoint = int(bin.read(8), 16)
+                entrypoint = int(bin.read(bitnessValues["Addr_SIZE"]), 16)
+
         return entrypoint
 
     def _find_bitness(self) -> int:
         with open(self.path, "rb") as bin:
             bin.seek(ELF_FORMAT["e_type"], 1)
-            (typeFlag,) = struct.unpack("<B", bin.read(1))
+            (typeFlag,) = struct.unpack("<b", bin.read(1))
             if typeFlag == 1:
                 return 32
             else:
@@ -94,14 +97,6 @@ class ELF(BinaryFile):
                 return "BE"
 
     def _find_text_seg_len(self) -> int:
-        # Initialize local variables
-        # bitnessValues = None
-        # e_shstrndx = None
-        # e_shentsize = None
-        # e_shnum = None
-        # e_shoff = None
-        # sh_dict = None
-        # shstraddr = None
 
         # Open the file for reading
         with open(self.path, "rb") as bin:
@@ -269,8 +264,8 @@ class ELF(BinaryFile):
         )
 
 
-class DOS(BinaryFile):
-    """DOS MZ executable (NE/PE)"""
+class PE(BinaryFile):
+    """Portable Executable (PE32/PE32+)"""
 
     def __init__(self, path) -> None:
         super().__init__()
@@ -278,60 +273,89 @@ class DOS(BinaryFile):
         self.endianness = self._find_endianness()
         self.bitness = self._find_bitness()
         self.entrypoint = self._find_entry_point()
+        self.textSegLen = self._find_text_seg_len()
 
     def _find_entry_point(self) -> int:
         # Open the file for reading
         with open(self.path, "rb") as bin:
 
             # Find e_lfanew pointer to _IMAGE_NT_HEADERS
-            bin.seek(DOS_FORMAT["e_lfanew"], 1)
-            (e_lfanew_ptr,) = struct.unpack("<L", bin.read(4))
+            bin.seek(PE_FORMAT["e_lfanew"], 1)
+            (e_lfanew_ptr,) = struct.unpack(
+                PE_FORMAT["ADDR_STRUCT"], bin.read(PE_FORMAT["ADDR_SIZE"])
+            )
 
             # Get AddressOfEntryPoint in _IMAGE_OPTIONAL_HEADER
             bin.seek(
-                e_lfanew_ptr + DOS_FORMAT["AddressOfEntryPoint"],
+                e_lfanew_ptr + PE_FORMAT["AddressOfEntryPoint"],
                 0,
             )
 
             if self.endianness == "LE":
-                if self.bitness == 32:
-                    (entrypoint,) = struct.unpack("<L", bin.read(4))
-                else:
-                    (entrypoint,) = struct.unpack("<Q", bin.read(8))
+                (entrypoint,) = struct.unpack(
+                    PE_FORMAT["ADDR_STRUCT"], bin.read(PE_FORMAT["ADDR_SIZE"])
+                )
             else:
-                if self.bitness == 32:
-                    entrypoint = int(bin.read(4), 16)
-                else:
-                    entrypoint = int(bin.read(8), 16)
+                entrypoint = int(bin.read(PE_FORMAT["ADDR_SIZE"]), 16)
+
+            # Read BaseOfCode from _IMAGE_OPTIONAL_HEADER
+            if self.endianness == "LE":
+                (base,) = struct.unpack(
+                    PE_FORMAT["DWORD_STRUCT"], bin.read(PE_FORMAT["DWORD_SIZE"])
+                )
+            else:
+                base = int(bin.read(PE_FORMAT["DWORD_SIZE"]), 16)
 
         return entrypoint
 
-    def _find_bitness(self) -> str:
+    def _find_bitness(self) -> int:
         # Open the file for reading
         with open(self.path, "rb") as bin:
 
             # Find e_lfanew pointer to _IMAGE_NT_HEADERS
-            bin.seek(DOS_FORMAT["e_lfanew"], 1)
-            (e_lfanew_ptr,) = struct.unpack("<L", bin.read(4))
+            bin.seek(PE_FORMAT["e_lfanew"], 1)
+            (e_lfanew_ptr,) = struct.unpack(
+                PE_FORMAT["DWORD_STRUCT"], bin.read(PE_FORMAT["DWORD_SIZE"])
+            )
 
-            # Get Addressing (32 or 64 bit) in _IMAGE_FILE_HEADER
-            bin.seek(e_lfanew_ptr + DOS_FORMAT["Machine"], 0)
+            # Get format magic numbers (PE32/PE32+) in _IMAGE_OPTIONAL_HEADER
+            bin.seek(e_lfanew_ptr + PE_FORMAT["Magic"], 0)
             if self.endianness == "LE":
-                (machine_flag,) = struct.unpack("<H", bin.read(2))
+                (machine_flag,) = struct.unpack(
+                    PE_FORMAT["WORD_STRUCT"], bin.read(PE_FORMAT["WORD_SIZE"])
+                )
             else:
-                machine_flag = int(bin.read(2), 16)
+                machine_flag = int(bin.read(PE_FORMAT["WORD_SIZE"]), 16)
 
-            # Find what the addressing format of the binary is
-            MACHINE_FLAGS = DOS_FORMAT["Machine_Flags"]
-            for addressing in MACHINE_FLAGS:
-                if machine_flag == MACHINE_FLAGS.get(addressing):
-                    return addressing
+            # Find what the bitness of the binary is
+            BITNESSFLAGS = PE_FORMAT["Format_Bitness"]
+            for bitness in BITNESSFLAGS:
+                if machine_flag == BITNESSFLAGS.get(bitness):
+                    return bitness
 
     def _find_endianness(self) -> str:
+        # All Windows platforms have a fixed endianness (little)
         return "LE"
 
     def _find_text_seg_len(self) -> int:
-        pass
+        with open(self.path, "rb") as bin:
+
+            # Find e_lfanew pointer to _IMAGE_NT_HEADERS
+            bin.seek(PE_FORMAT["e_lfanew"], 1)
+            (e_lfanew_ptr,) = struct.unpack(
+                PE_FORMAT["DWORD_STRUCT"], bin.read(PE_FORMAT["DWORD_SIZE"])
+            )
+
+            # Get SizeOfCode in _IMAGE_OPTIONAL_HEADER
+            bin.seek(e_lfanew_ptr + PE_FORMAT["SizeOfCode"], 0)
+            if self.endianness == "LE":
+                (sizeOfCode,) = struct.unpack(
+                    PE_FORMAT["DWORD_STRUCT"], bin.read(PE_FORMAT["DWORD_SIZE"])
+                )
+            else:
+                sizeOfCode = int(bin.read(PE_FORMAT["DWORD_SIZE"]), 16)
+
+            return sizeOfCode
 
     def get_entry_point(self) -> int:
         return self.entrypoint
@@ -371,9 +395,9 @@ class ELFFactory(BinaryFileFactory):
         return ELF(path)
 
 
-class DOSFactory(BinaryFileFactory):
-    """Factory to provide an DOS instance"""
+class PEFactory(BinaryFileFactory):
+    """Factory to provide a PE instance"""
 
     def get_binaryfile(self, path) -> BinaryFile:
         """Returns a new BinaryFile instance"""
-        return DOS(path)
+        return PE(path)

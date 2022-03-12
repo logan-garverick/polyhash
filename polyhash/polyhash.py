@@ -128,7 +128,7 @@ def polyhash():
     # Debug Info here
     counter = 0
 
-    formatter = Formatter(FormatterSyntax.INTEL)
+    formatter = Formatter(FormatterSyntax.NASM)
     formatter.digit_separator = "`"
     formatter.first_operand_char_index = 10
     print(
@@ -136,9 +136,16 @@ def polyhash():
     )
     for instr in decoder:
         disasm = formatter.format(instr)
-        print(f"\t\t{disasm}")
+        # print(f"\t\t{disasm}")
+
+        start_index = instr.ip - binaryInfo["entrypoint"]
+        bytes_str = fileContent[start_index : start_index + instr.len].hex().upper()
+        # Eg. "00007FFAC46ACDB2 488DAC2400FFFFFF     lea       rbp,[rsp-100h]"
+        print(f"{instr.ip:016X} {bytes_str:20} {disasm}")
 
         counter += 1
+        if counter > 1:
+            break
     print(f"\n\t\tPolyHash decoded {colors.BOLD}{counter}{colors.ENDC} instructions")
     print(
         f"\t{colors.HEADER}     ------------------------------------------ {colors.ENDC}"

@@ -1,11 +1,19 @@
-DOS_FORMAT = {
-    "e_lfanew": 60,
+PE_FORMAT = {
     "Machine": 4,
-    "Machine_Flags": {
-        32: 0x014C,
-        64: 0x8664,
+    "Format_Bitness": {
+        32: 0x010B,
+        64: 0x020B,
     },
+    "e_lfanew": 60,
+    "Magic": 24,
+    "SizeOfCode": 28,
     "AddressOfEntryPoint": 40,
+    "WORD_STRUCT": "<H",
+    "WORD_SIZE": 2,
+    "DWORD_STRUCT": "<L",
+    "DWORD_SIZE": 4,
+    "ADDR_STRUCT": "<L",
+    "ADDR_SIZE": 4,
 }
 
 ELF_FORMAT = {

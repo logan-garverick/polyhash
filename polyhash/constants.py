@@ -8,9 +8,9 @@ FILE_FORMAT_INFO = [
         "factory": ELFFactory(),
     },
     {
-        "abbr": "DOS",
-        "name": "DOS MZ executable (NE/PE)",
+        "abbr": "PE",
+        "name": "Portable Executable (PE32/PE32+)",
         "sig": bytes([0x4D, 0x5A]),
-        "factory": DOSFactory(),
+        "factory": PEFactory(),
     },
 ]
