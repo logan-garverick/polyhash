@@ -13,7 +13,39 @@
             "console": "integratedTerminal",
             "args": [
                 "-v",
-                "/home/lgarv/Downloads/hello"
+                "-o",
+                "${workspaceFolder}/hello_elf64.polyhash",
+                "${workspaceFolder}/examples/hello_elf64"
+            ],
+            "justMyCode": true
+        },
+        {
+            "name": "32-bit ELF",
+            "type": "python",
+            "python": "${workspaceFolder}/.venv/bin/python",
+            "request": "launch",
+            "program": "${workspaceFolder}/polyhash/polyhash.py",
+            "console": "integratedTerminal",
+            "args": [
+                "-v",
+                "-o",
+                "${workspaceFolder}/hello_elf32.polyhash",
+                "${workspaceFolder}/examples/hello_elf32"
+            ],
+            "justMyCode": true
+        },
+        {
+            "name": "PE32",
+            "type": "python",
+            "python": "${workspaceFolder}/.venv/bin/python",
+            "request": "launch",
+            "program": "${workspaceFolder}/polyhash/polyhash.py",
+            "console": "integratedTerminal",
+            "args": [
+                "-v",
+                "-o",
+                "${workspaceFolder}/hello_pe32.polyhash",
+                "${workspaceFolder}/examples/hello_pe32.exe"
             ],
             "justMyCode": true
         }
