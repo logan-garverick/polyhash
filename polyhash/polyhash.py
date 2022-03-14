@@ -6,10 +6,9 @@ Description: This will be the main execution file to accept and parse command
 
 import argparse
 from os.path import exists
-
+from utils.binaryfilefactory import *
 from utils.bcolors import *
 from utils.binaryfile import *
-from constants import *
 from iced_x86 import *
 
 
@@ -41,21 +40,7 @@ def configure_parser():
     )
 
 
-def get_format_info() -> dict:
-    """Check the provided binary file for common magic numbers to determine file format
-
-    Returns:
-        str: the file format of the provided binary
-    """
-    with open(args.binary, "rb") as binary:
-        fileHeader = binary.read(32)
-        for format in FILE_FORMAT_INFO:
-            if fileHeader.startswith(format.get("sig")):
-                return format
-        return None
-
-
-def get_BinaryFile() -> BinaryFileFactory:
+def get_BinaryFile() -> BinaryFile:
     """Verifies the provided binary and generates a PH_Binary object for it
 
     Raises:
@@ -71,27 +56,23 @@ def get_BinaryFile() -> BinaryFileFactory:
             if args.verbose:
                 print(f"\t{colors.OKGREEN}LOG{colors.ENDC}:{args.binary} was found.")
 
-            # Attempt to determine the file format of the provided binary
-            formatInfo = get_format_info()
-            if formatInfo is not None:
+            # Attempt to create a BinaryFile object
+            fac = BinaryFileFactory()
+            bf = fac.get_BinaryFile_instance(args.binary)
+            if bf is not None:
                 if args.verbose:
                     print(
-                        '\t{}LOG{}:Determined {} format is: "{}" ({})'.format(
-                            colors.OKGREEN,
-                            colors.ENDC,
-                            args.binary,
-                            formatInfo["name"],
-                            formatInfo["abbr"],
-                        )
+                        f"\t{colors.OKGREEN}LOG{colors.ENDC}: -----Generated BinaryFile Information----- "
                     )
+                    bf.display_format_info()
+                    print(f"\t     ------------------------------------------ ")
             else:
                 print(
                     f"\t{colors.FAIL}ERROR{colors.ENDC}:Unable to determine binary format. Stopping analysis."
                 )
                 exit(0)
 
-            # Attempt to create a BinaryFile object
-            return formatInfo["factory"]
+            return bf
         else:
             raise FileNotFoundError
     except FileNotFoundError:
@@ -104,15 +85,7 @@ def polyhash():
     fileContent = None
 
     # Retrieve BinaryFile instance of binary
-    bfFactory = get_BinaryFile()
-    bf = bfFactory.get_binaryfile(args.binary)
-
-    if args.verbose:
-        print(
-            f"\t{colors.OKGREEN}LOG{colors.ENDC}: -----Generated BinaryFile Information----- "
-        )
-        bf.display_format_info()
-        print(f"\t     ------------------------------------------ ")
+    bf = get_BinaryFile()
 
     # Retrieve BinaryFile file info to start analysis
     binaryInfo = bf.get_format_info()
@@ -125,7 +98,7 @@ def polyhash():
     # Attempt to decompile instructions
     decoder = Decoder(binaryInfo["bitness"], fileContent, ip=binaryInfo["entrypoint"])
 
-    # Debug Info here
+    # ****************************** DEBUG INFO HERE ******************************
     counter = 0
 
     formatter = Formatter(FormatterSyntax.NASM)
@@ -139,17 +112,18 @@ def polyhash():
         # print(f"\t\t{disasm}")
 
         start_index = instr.ip - binaryInfo["entrypoint"]
-        bytes_str = fileContent[start_index : start_index + instr.len].hex().upper()
+        bytes_str = fileContent[start_index : start_index + instr.len].hex()
         # Eg. "00007FFAC46ACDB2 488DAC2400FFFFFF     lea       rbp,[rsp-100h]"
         print(f"{instr.ip:016X} {bytes_str:20} {disasm}")
 
         counter += 1
-        if counter > 1:
+        if counter == 10:
             break
     print(f"\n\t\tPolyHash decoded {colors.BOLD}{counter}{colors.ENDC} instructions")
     print(
         f"\t{colors.HEADER}     ------------------------------------------ {colors.ENDC}"
     )
+    # ****************************** DEBUG INFO HERE ******************************
 
 
 if __name__ == "__main__":

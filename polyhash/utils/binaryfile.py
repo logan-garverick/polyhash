@@ -56,6 +56,7 @@ class ELF(BinaryFile):
         self.bitness = self._find_bitness()
         self.entrypoint = self._find_entry_point()
         self.textSegLen = self._find_text_seg_len()
+        self.fileFormatInfo = FILE_FORMAT_INFO[0]
 
     def _find_entry_point(self) -> int:
         with open(self.path, "rb") as bin:
@@ -257,6 +258,7 @@ class ELF(BinaryFile):
     def display_format_info(self) -> None:
         print(
             f"\t\tPath:\t\t{self.path}\n"
+            + f"\t\tFormat:\t\t{self.fileFormatInfo['NAME']}\n"
             + f"\t\tBitness:\t{self.bitness}\n"
             + f"\t\tEndianness:\t{self.endianness}\n"
             + f"\t\tEntry Point:\t{hex(self.entrypoint)}\n"
@@ -274,6 +276,7 @@ class PE(BinaryFile):
         self.bitness = self._find_bitness()
         self.entrypoint = self._find_entry_point()
         self.textSegLen = self._find_text_seg_len()
+        self.fileFormatInfo = FILE_FORMAT_INFO[1]
 
     def _find_entry_point(self) -> int:
         # Open the file for reading
@@ -372,32 +375,9 @@ class PE(BinaryFile):
     def display_format_info(self) -> None:
         print(
             f"\t\tPath:\t\t{self.path}\n"
+            + f"\t\tFormat:\t\t{self.fileFormatInfo['NAME']}\n"
             + f"\t\tBitness:\t{self.bitness}\n"
             + f"\t\tEndianness:\t{self.endianness}\n"
             + f"\t\tEntry Point:\t{hex(self.entrypoint)}\n"
             + f"\t\tText Seg. Len.:\t{hex(self.textSegLen)}"
         )
-
-
-class BinaryFileFactory(ABC):
-    """Factory that generates an BinaryFile object based on the file format signature discovered"""
-
-    @abstractmethod
-    def get_binaryfile(self, path) -> BinaryFile:
-        """Returns a new BinaryFile instance"""
-
-
-class ELFFactory(BinaryFileFactory):
-    """Factory to provide an ELF instance"""
-
-    def get_binaryfile(self, path) -> BinaryFile:
-        """Returns a new BinaryFile instance"""
-        return ELF(path)
-
-
-class PEFactory(BinaryFileFactory):
-    """Factory to provide a PE instance"""
-
-    def get_binaryfile(self, path) -> BinaryFile:
-        """Returns a new BinaryFile instance"""
-        return PE(path)

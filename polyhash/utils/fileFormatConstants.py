@@ -1,3 +1,19 @@
+from utils.binaryfile import *
+
+FILE_FORMAT_INFO = [
+    {
+        "ABBR": "ELF",
+        "NAME": "Executable and Linkable Format",
+        "MAGIC": bytes([0x7F, 0x45, 0x4C, 0x46]),
+    },
+    {
+        "ABBR": "PE",
+        "NAME": "Portable Executable (PE32/PE32+)",
+        "MAGIC": bytes([0x4D, 0x5A]),
+    },
+]
+
+
 PE_FORMAT = {
     "Machine": 4,
     "Format_Bitness": {

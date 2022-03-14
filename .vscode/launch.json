@@ -5,21 +5,6 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "64-bit ELF",
-            "type": "python",
-            "python": "${workspaceFolder}/.venv/bin/python",
-            "request": "launch",
-            "program": "${workspaceFolder}/polyhash/polyhash.py",
-            "console": "integratedTerminal",
-            "args": [
-                "-v",
-                "-o",
-                "${workspaceFolder}/hello_elf64.polyhash",
-                "${workspaceFolder}/examples/hello_elf64"
-            ],
-            "justMyCode": true
-        },
-        {
             "name": "32-bit ELF",
             "type": "python",
             "python": "${workspaceFolder}/.venv/bin/python",
@@ -35,7 +20,22 @@
             "justMyCode": true
         },
         {
-            "name": "PE32",
+            "name": "64-bit ELF",
+            "type": "python",
+            "python": "${workspaceFolder}/.venv/bin/python",
+            "request": "launch",
+            "program": "${workspaceFolder}/polyhash/polyhash.py",
+            "console": "integratedTerminal",
+            "args": [
+                "-v",
+                "-o",
+                "${workspaceFolder}/hello_elf64.polyhash",
+                "${workspaceFolder}/examples/hello_elf64"
+            ],
+            "justMyCode": true
+        },
+        {
+            "name": "32-bit PE",
             "type": "python",
             "python": "${workspaceFolder}/.venv/bin/python",
             "request": "launch",
@@ -48,6 +48,21 @@
                 "${workspaceFolder}/examples/hello_pe32.exe"
             ],
             "justMyCode": true
-        }
+        },
+        {
+            "name": "64-bit PE",
+            "type": "python",
+            "python": "${workspaceFolder}/.venv/bin/python",
+            "request": "launch",
+            "program": "${workspaceFolder}/polyhash/polyhash.py",
+            "console": "integratedTerminal",
+            "args": [
+                "-v",
+                "-o",
+                "${workspaceFolder}/hello_pe32.polyhash",
+                "${workspaceFolder}/examples/hello_pe32+.exe"
+            ],
+            "justMyCode": true
+        },
     ]
 }
