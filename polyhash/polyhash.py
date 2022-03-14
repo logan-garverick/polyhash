@@ -41,7 +41,7 @@ def configure_parser():
 
 
 def get_BinaryFile() -> BinaryFile:
-    """Verifies the provided binary and generates a PH_Binary object for it
+    """Verifies the provided binary and employs the BinaryFileFactory class to generate a BinaryFile instance
 
     Raises:
         FileNotFoundError: raised when the provided file does not exist
@@ -82,8 +82,6 @@ def get_BinaryFile() -> BinaryFile:
 
 def polyhash():
 
-    fileContent = None
-
     # Retrieve BinaryFile instance of binary
     bf = get_BinaryFile()
 
@@ -91,6 +89,7 @@ def polyhash():
     binaryInfo = bf.get_format_info()
 
     # Read the content of the binary file to give to decompiler
+    fileContent = None
     with open(binaryInfo["path"], "rb") as f:
         f.seek(binaryInfo["entrypoint"])
         fileContent = f.read(binaryInfo["textSegLen"])
@@ -105,7 +104,10 @@ def polyhash():
     formatter.digit_separator = "`"
     formatter.first_operand_char_index = 10
     print(
-        f"\t{colors.HEADER}     ------- DEBUG: Decoded Instruction ------- {colors.ENDC}"
+        f"\t{colors.HEADER}     --------------------- DEBUG: Decoded Instruction --------------------- {colors.ENDC}"
+    )
+    print(
+        f"\t{colors.HEADER}       |--Byte Address--|----Instr. Bytes----|Mnemonic|----Operands----|{colors.ENDC}"
     )
     for instr in decoder:
         disasm = formatter.format(instr)
@@ -114,14 +116,14 @@ def polyhash():
         start_index = instr.ip - binaryInfo["entrypoint"]
         bytes_str = fileContent[start_index : start_index + instr.len].hex()
         # Eg. "00007FFAC46ACDB2 488DAC2400FFFFFF     lea       rbp,[rsp-100h]"
-        print(f"{instr.ip:016X} {bytes_str:20} {disasm}")
+        print(f"\t\t{instr.ip:016X} {bytes_str:20} {disasm}")
 
         counter += 1
         if counter == 10:
             break
     print(f"\n\t\tPolyHash decoded {colors.BOLD}{counter}{colors.ENDC} instructions")
     print(
-        f"\t{colors.HEADER}     ------------------------------------------ {colors.ENDC}"
+        f"\t{colors.HEADER}     ---------------------------------------------------------------------- {colors.ENDC}"
     )
     # ****************************** DEBUG INFO HERE ******************************
 

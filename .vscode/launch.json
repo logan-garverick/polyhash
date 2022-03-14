@@ -59,7 +59,7 @@
             "args": [
                 "-v",
                 "-o",
-                "${workspaceFolder}/hello_pe32.polyhash",
+                "${workspaceFolder}/hello_pe32+.polyhash",
                 "${workspaceFolder}/examples/hello_pe32+.exe"
             ],
             "justMyCode": true
