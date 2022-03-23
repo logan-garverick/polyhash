@@ -91,11 +91,11 @@ def polyhash():
     # Read the content of the binary file to give to decompiler
     fileContent = None
     with open(binaryInfo["path"], "rb") as f:
-        f.seek(binaryInfo["entrypoint"])
+        f.seek(binaryInfo["start"])
         fileContent = f.read(binaryInfo["textSegLen"])
 
     # Attempt to decompile instructions
-    decoder = Decoder(binaryInfo["bitness"], fileContent, ip=binaryInfo["entrypoint"])
+    decoder = Decoder(binaryInfo["bitness"], fileContent, ip=binaryInfo["virtualstart"])
 
     # ****************************** DEBUG INFO HERE ******************************
     counter = 0
