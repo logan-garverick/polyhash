@@ -16,6 +16,8 @@ class ELF(BinaryFile):
         self.endianness = self._find_endianness()
         self.bitness = self._find_bitness()
         self.entrypoint = self._find_entry_point()
+        self.start = self._find_start_point()
+        self.virtStart = self._find_virt_start_point()
         self.textSegLen = self._find_text_seg_len()
         self.fileFormatInfo = FILE_FORMAT_INFO[0]
 
@@ -39,6 +41,12 @@ class ELF(BinaryFile):
                 entrypoint = int(bin.read(bitnessValues["Addr_SIZE"]), 16)
 
         return entrypoint
+
+    def _find_start_point(self) -> int:
+        return self.entrypoint
+
+    def _find_virt_start_point(self) -> int:
+        return self.entrypoint
 
     def _find_bitness(self) -> int:
         with open(self.path, "rb") as bin:
@@ -213,15 +221,18 @@ class ELF(BinaryFile):
             "bitness": self.bitness,
             "endianness": self.endianness,
             "entrypoint": self.entrypoint,
+            "start": self.start,
+            "virtualstart": self.virtStart,
             "textSegLen": self.textSegLen,
         }
 
     def display_format_info(self) -> None:
         print(
-            f"\t\tPath:\t\t{self.path}\n"
-            + f"\t\tFormat:\t\t{self.fileFormatInfo['NAME']}\n"
-            + f"\t\tBitness:\t{self.bitness}\n"
-            + f"\t\tEndianness:\t{self.endianness}\n"
-            + f"\t\tEntry Point:\t{hex(self.entrypoint)}\n"
-            + f"\t\tText Seg. Len.:\t{hex(self.textSegLen)}"
+            f"\t\tPath:\t\t\t{self.path}\n"
+            + f"\t\tFormat:\t\t\t{self.fileFormatInfo['NAME']}\n"
+            + f"\t\tBitness:\t\t{self.bitness}\n"
+            + f"\t\tEndianness:\t\t{self.endianness}\n"
+            + f"\t\tEntry Point:\t\t{hex(self.entrypoint)}\n"
+            + f"\t\tText Seg. Start:\t{hex(self.virtStart)}\n"
+            + f"\t\tText Seg. Len.:\t\t{hex(self.textSegLen)}"
         )

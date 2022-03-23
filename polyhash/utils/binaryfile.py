@@ -20,6 +20,16 @@ class BinaryFile:
         """This method will find the entry point in the binary file based on its format"""
 
     @abstractmethod
+    def _find_start_point(self) -> int:
+        """This method will find the start point of the raw data (physical address) for the text segment
+        in the binary file based on its format"""
+
+    @abstractmethod
+    def _find_virt_start_point(self) -> int:
+        """This method will find the start point of the virtual data (virtual address) for the text segment
+        in the binary file based on its format"""
+
+    @abstractmethod
     def _find_bitness(self) -> int:
         """This method will find the machine addressing (32 or 64 bit) in the binary file based on its format"""
 
