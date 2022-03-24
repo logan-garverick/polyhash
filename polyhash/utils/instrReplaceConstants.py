@@ -197,6 +197,81 @@ SWAPLIST_7_BYTES = [
     NOP1 + NOP4 + NOP2 + XXXX + XXXX + XXXX + XXXX,
 ]
 
+SWAPLIST_8_BYTES = [
+    # 1 byte opcode swaps
+    NOP1 + NOP1 + NOP1 + NOP1 + NOP1 + NOP1 + NOP1 + NOP1,
+    # 2 byte opcode swaps
+    NOP2 + NOP2 + NOP2 + NOP2 + XXXX + XXXX + XXXX + XXXX,
+    # 4 byte opcode swaps
+    NOP4 + NOP4 + XXXX + XXXX + XXXX + XXXX + XXXX + XXXX,
+    # 8 byte opcode swaps
+    NOP8 + XXXX + XXXX + XXXX + XXXX + XXXX + XXXX + XXXX,
+    # 2+1 byte opcode swaps
+    NOP2 + NOP1 + NOP1 + NOP1 + NOP1 + NOP1 + NOP1 + XXXX,
+    NOP1 + NOP2 + NOP1 + NOP1 + NOP1 + NOP1 + NOP1 + XXXX,
+    NOP1 + NOP1 + NOP2 + NOP1 + NOP1 + NOP1 + NOP1 + XXXX,
+    NOP1 + NOP1 + NOP1 + NOP2 + NOP1 + NOP1 + NOP1 + XXXX,
+    NOP1 + NOP1 + NOP1 + NOP1 + NOP2 + NOP1 + NOP1 + XXXX,
+    NOP1 + NOP1 + NOP1 + NOP1 + NOP1 + NOP2 + NOP1 + XXXX,
+    NOP1 + NOP1 + NOP1 + NOP1 + NOP1 + NOP1 + NOP2 + XXXX,
+    NOP2 + NOP2 + NOP1 + NOP1 + NOP1 + NOP1 + XXXX + XXXX,
+    NOP2 + NOP1 + NOP2 + NOP1 + NOP1 + NOP1 + XXXX + XXXX,
+    NOP2 + NOP1 + NOP1 + NOP2 + NOP1 + NOP1 + XXXX + XXXX,
+    NOP2 + NOP1 + NOP1 + NOP1 + NOP2 + NOP1 + XXXX + XXXX,
+    NOP2 + NOP1 + NOP1 + NOP1 + NOP1 + NOP2 + XXXX + XXXX,
+    NOP1 + NOP2 + NOP2 + NOP1 + NOP1 + NOP1 + XXXX + XXXX,
+    NOP1 + NOP2 + NOP1 + NOP2 + NOP1 + NOP1 + XXXX + XXXX,
+    NOP1 + NOP2 + NOP1 + NOP1 + NOP2 + NOP1 + XXXX + XXXX,
+    NOP1 + NOP2 + NOP1 + NOP1 + NOP1 + NOP2 + XXXX + XXXX,
+    NOP1 + NOP1 + NOP2 + NOP2 + NOP1 + NOP1 + XXXX + XXXX,
+    NOP1 + NOP1 + NOP2 + NOP1 + NOP2 + NOP1 + XXXX + XXXX,
+    NOP1 + NOP1 + NOP2 + NOP1 + NOP1 + NOP2 + XXXX + XXXX,
+    NOP1 + NOP1 + NOP1 + NOP2 + NOP2 + NOP1 + XXXX + XXXX,
+    NOP1 + NOP1 + NOP1 + NOP2 + NOP1 + NOP2 + XXXX + XXXX,
+    NOP1 + NOP1 + NOP1 + NOP1 + NOP2 + NOP2 + XXXX + XXXX,
+    NOP2 + NOP2 + NOP2 + NOP1 + NOP1 + XXXX + XXXX + XXXX,
+    NOP2 + NOP2 + NOP1 + NOP2 + NOP1 + XXXX + XXXX + XXXX,
+    NOP2 + NOP1 + NOP2 + NOP2 + NOP1 + XXXX + XXXX + XXXX,
+    NOP1 + NOP2 + NOP2 + NOP2 + NOP1 + XXXX + XXXX + XXXX,
+    NOP2 + NOP2 + NOP1 + NOP1 + NOP2 + XXXX + XXXX + XXXX,
+    NOP2 + NOP1 + NOP2 + NOP1 + NOP2 + XXXX + XXXX + XXXX,
+    NOP1 + NOP2 + NOP2 + NOP1 + NOP2 + XXXX + XXXX + XXXX,
+    NOP2 + NOP1 + NOP1 + NOP2 + NOP2 + XXXX + XXXX + XXXX,
+    NOP1 + NOP2 + NOP1 + NOP2 + NOP2 + XXXX + XXXX + XXXX,
+    NOP1 + NOP1 + NOP2 + NOP2 + NOP2 + XXXX + XXXX + XXXX,
+    # 3+1 byte opcode swaps
+    NOP3 + NOP1 + NOP1 + NOP1 + NOP1 + NOP1 + XXXX + XXXX,
+    NOP1 + NOP3 + NOP1 + NOP1 + NOP1 + NOP1 + XXXX + XXXX,
+    NOP1 + NOP1 + NOP3 + NOP1 + NOP1 + NOP1 + XXXX + XXXX,
+    NOP1 + NOP1 + NOP1 + NOP3 + NOP1 + NOP1 + XXXX + XXXX,
+    NOP1 + NOP1 + NOP1 + NOP1 + NOP3 + NOP1 + XXXX + XXXX,
+    NOP1 + NOP1 + NOP1 + NOP1 + NOP1 + NOP3 + XXXX + XXXX,
+    NOP3 + NOP3 + NOP1 + NOP1 + XXXX + XXXX + XXXX + XXXX,
+    NOP3 + NOP1 + NOP3 + NOP1 + XXXX + XXXX + XXXX + XXXX,
+    NOP3 + NOP1 + NOP1 + NOP3 + XXXX + XXXX + XXXX + XXXX,
+    NOP1 + NOP3 + NOP3 + NOP1 + XXXX + XXXX + XXXX + XXXX,
+    NOP1 + NOP3 + NOP1 + NOP3 + XXXX + XXXX + XXXX + XXXX,
+    NOP1 + NOP1 + NOP3 + NOP3 + XXXX + XXXX + XXXX + XXXX,
+    # 4+1 byte opcode swaps
+    NOP4 + NOP1 + NOP1 + NOP1 + NOP1 + XXXX + XXXX + XXXX,
+    NOP1 + NOP4 + NOP1 + NOP1 + NOP1 + XXXX + XXXX + XXXX,
+    NOP1 + NOP1 + NOP4 + NOP1 + NOP1 + XXXX + XXXX + XXXX,
+    NOP1 + NOP1 + NOP1 + NOP4 + NOP1 + XXXX + XXXX + XXXX,
+    NOP1 + NOP1 + NOP1 + NOP1 + NOP4 + XXXX + XXXX + XXXX,
+    # 5+1 byte opcode swaps
+    NOP5 + NOP1 + NOP1 + NOP1 + XXXX + XXXX + XXXX + XXXX,
+    NOP1 + NOP5 + NOP1 + NOP1 + XXXX + XXXX + XXXX + XXXX,
+    NOP1 + NOP1 + NOP5 + NOP1 + XXXX + XXXX + XXXX + XXXX,
+    NOP1 + NOP1 + NOP1 + NOP5 + XXXX + XXXX + XXXX + XXXX,
+    # 6+1 byte opcode swaps
+    NOP6 + NOP1 + NOP1 + XXXX + XXXX + XXXX + XXXX + XXXX,
+    NOP1 + NOP6 + NOP1 + XXXX + XXXX + XXXX + XXXX + XXXX,
+    NOP1 + NOP1 + NOP6 + XXXX + XXXX + XXXX + XXXX + XXXX,
+    # 7+1 byte opcode swaps
+    NOP7 + NOP1 + XXXX + XXXX + XXXX + XXXX + XXXX + XXXX,
+    NOP1 + NOP7 + XXXX + XXXX + XXXX + XXXX + XXXX + XXXX,
+]
+
 INSTR_SET = [
     {
         # Multi-byte NOP (2 bytes)
