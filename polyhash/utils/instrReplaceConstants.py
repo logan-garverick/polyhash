@@ -349,17 +349,37 @@ SWAPLIST_8_BYTES = [
 INSTR_SET = [
     {
         # Multi-byte NOP (2 bytes)
-        "ORIG_INSTR": bytes([0x66, 0x90]),
+        "ORIG_INSTR": NOP2,
         "SWAPS": SWAPLIST_2_BYTES,
     },
     {
         # Multi-byte NOP (3 bytes)
-        "ORIG_INSTR": bytes([0x0F, 0x1F, 0x00]),
+        "ORIG_INSTR": NOP3,
         "SWAPS": SWAPLIST_3_BYTES,
     },
     {
         # Multi-byte NOP (4 bytes)
-        "ORIG_INSTR": bytes([0x0F, 0x1F, 0x40, 0x00]),
+        "ORIG_INSTR": NOP4,
         "SWAPS": SWAPLIST_4_BYTES,
+    },
+    {
+        # Multi-byte NOP (5 bytes)
+        "ORIG_INSTR": NOP5,
+        "SWAPS": SWAPLIST_5_BYTES,
+    },
+    {
+        # Multi-byte NOP (6 bytes)
+        "ORIG_INSTR": NOP6,
+        "SWAPS": SWAPLIST_6_BYTES,
+    },
+    {
+        # Multi-byte NOP (7 bytes)
+        "ORIG_INSTR": NOP7,
+        "SWAPS": SWAPLIST_7_BYTES,
+    },
+    {
+        # Multi-byte NOP (8 bytes)
+        "ORIG_INSTR": NOP8,
+        "SWAPS": SWAPLIST_8_BYTES,
     },
 ]
