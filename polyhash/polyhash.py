@@ -10,6 +10,7 @@ from utils.binaryfilefactory import *
 from utils.bcolors import *
 from utils.binaryfile import *
 from utils.hotswap import *
+from itertools import islice
 from iced_x86 import *
 
 
@@ -81,6 +82,28 @@ def get_BinaryFile() -> BinaryFile:
         exit(1)
 
 
+def generate_hashtable_file(hashlist, outputFile, inputFile) -> None:
+    """Writes the generated hash table to the desired output file
+
+    Args:
+        hashlist (list): a list of possible hash values for the provided binary file
+        outputFile (str): the location to save the hash table
+        inputFile (str): the binary file that has been analyzed
+    """
+    with open(outputFile, "w+") as hashtable:
+        # Write the original hash to the file
+        hashtable.write(f"POSSIBLE POLYMORPHIC SIGNATURES FOR {inputFile}\n\n")
+        hashtable.write(f"ORIGINAL SIGNATURE:\t{hashlist[0]}\n\n")
+
+        # Write all possible signatures if any
+        hashtable.write(f"POSSIBLE POLYMORPHIC SIGNATURES:\n")
+        if len(hashlist) > 1:
+            for signature in islice(hashlist, 1, len(hashlist)):
+                hashtable.write(f"\t{signature}\n")
+        else:
+            hashtable.write(f"\tNO POLYMORPHIC SIGNATURES FOUND\n")
+
+
 def polyhash():
 
     # Retrieve BinaryFile instance of binary
@@ -115,7 +138,8 @@ def polyhash():
             f"\t{colors.OKGREEN}LOG{colors.ENDC}: Polyhash generated {colors.BOLD}{len(hashlist)}{colors.ENDC} possible unique polymorphic hashes."
         )
 
-    print(hashlist)
+    # Write generated hashes to output file
+    generate_hashtable_file(hashlist, args.output_path, args.binary)
 
 
 if __name__ == "__main__":

@@ -14,7 +14,7 @@
             "args": [
                 "-v",
                 "-o",
-                "${workspaceFolder}/hello_elf32.polyhash",
+                "${workspaceFolder}/examples/hello_elf32.polyhash",
                 "${workspaceFolder}/examples/hello_elf32"
             ],
             "justMyCode": true
@@ -29,7 +29,7 @@
             "args": [
                 "-v",
                 "-o",
-                "${workspaceFolder}/hello_elf64.polyhash",
+                "${workspaceFolder}/examples/hello_elf64.polyhash",
                 "${workspaceFolder}/examples/hello_elf64"
             ],
             "justMyCode": true
@@ -44,7 +44,7 @@
             "args": [
                 "-v",
                 "-o",
-                "${workspaceFolder}/hello_pe32.polyhash",
+                "${workspaceFolder}/examples/hello_pe32.polyhash",
                 "${workspaceFolder}/examples/hello_pe32.exe"
             ],
             "justMyCode": true
@@ -59,7 +59,7 @@
             "args": [
                 "-v",
                 "-o",
-                "${workspaceFolder}/hello_pe32+.polyhash",
+                "${workspaceFolder}/examples/hello_pe32+.polyhash",
                 "${workspaceFolder}/examples/hello_pe32+.exe"
             ],
             "justMyCode": true
