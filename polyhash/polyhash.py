@@ -9,6 +9,7 @@ from os.path import exists
 from utils.binaryfilefactory import *
 from utils.bcolors import *
 from utils.binaryfile import *
+from utils.hotswap import *
 from iced_x86 import *
 
 
@@ -97,35 +98,45 @@ def polyhash():
     # Attempt to decompile instructions
     decoder = Decoder(binaryInfo["bitness"], fileContent, ip=binaryInfo["virtualstart"])
 
-    # ****************************** DEBUG INFO HERE ******************************
-    counter = 0
+    # # ****************************** DEBUG INFO HERE ******************************
+    # counter = 0
 
-    formatter = Formatter(FormatterSyntax.NASM)
-    formatter.digit_separator = "`"
-    formatter.first_operand_char_index = 10
-    print(
-        f"\t{colors.HEADER}     --------------------- DEBUG: Decoded Instruction --------------------- {colors.ENDC}"
-    )
-    print(
-        f"\t{colors.HEADER}       |--Byte Address--|----Instr. Bytes----|Mnemonic|----Operands----|{colors.ENDC}"
-    )
-    for instr in decoder:
-        disasm = formatter.format(instr)
-        # print(f"\t\t{disasm}")
+    # formatter = Formatter(FormatterSyntax.NASM)
+    # formatter.digit_separator = "`"
+    # formatter.first_operand_char_index = 10
+    # print(
+    #     f"\t{colors.HEADER}     --------------------- DEBUG: Decoded Instruction --------------------- {colors.ENDC}"
+    # )
+    # print(
+    #     f"\t{colors.HEADER}       |--Byte Address--|----Instr. Bytes----|Mnemonic|----Operands----|{colors.ENDC}"
+    # )
+    # for instr in decoder:
+    #     disasm = formatter.format(instr)
+    #     # print(f"\t\t{disasm}")
 
-        start_index = instr.ip - binaryInfo["entrypoint"]
-        bytes_str = fileContent[start_index : start_index + instr.len].hex()
-        # Eg. "00007FFAC46ACDB2 488DAC2400FFFFFF     lea       rbp,[rsp-100h]"
-        print(f"\t\t{instr.ip:016X} {bytes_str:20} {disasm}")
+    #     start_index = instr.ip - binaryInfo["entrypoint"]
+    #     bytes_str = fileContent[start_index : start_index + instr.len].hex()
+    #     # Eg. "00007FFAC46ACDB2 488DAC2400FFFFFF     lea       rbp,[rsp-100h]"
+    #     print(f"\t\t{instr.ip:016X} {bytes_str:20} {disasm}")
 
-        counter += 1
-        if counter == 10:
-            break
-    print(f"\n\t\tPolyHash decoded {colors.BOLD}{counter}{colors.ENDC} instructions")
-    print(
-        f"\t{colors.HEADER}     ---------------------------------------------------------------------- {colors.ENDC}"
-    )
-    # ****************************** DEBUG INFO HERE ******************************
+    #     counter += 1
+    #     if counter == 10:
+    #         break
+    # print(f"\n\t\tPolyHash decoded {colors.BOLD}{counter}{colors.ENDC} instructions")
+    # print(
+    #     f"\t{colors.HEADER}     ---------------------------------------------------------------------- {colors.ENDC}"
+    # )
+    # # ****************************** DEBUG INFO HERE ******************************
+
+    # Attempt to find a list of hot-swappable instructions
+    (instrcnt, swaplist) = find_swaps(decoder, binaryInfo["entrypoint"], fileContent)
+    if args.verbose:
+        print(
+            f"\t{colors.OKGREEN}LOG{colors.ENDC}: Polyhash detected {colors.BOLD}{instrcnt}{colors.ENDC} instructions in the binary's text segment."
+        )
+        print(
+            f"\t{colors.OKGREEN}LOG{colors.ENDC}: Polyhash detected {colors.BOLD}{len(swaplist)}{colors.ENDC} possible swap locations."
+        )
 
 
 if __name__ == "__main__":
