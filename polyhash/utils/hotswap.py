@@ -1,8 +1,8 @@
 """
 Description: This will be the definitions of the instruction hot-swapping functionality.
 """
-from typing import List
 from utils.instrReplaceConstants import *
+from hashlib import md5
 from iced_x86 import *
 
 
@@ -36,3 +36,52 @@ def find_swaps(decoder, entrypoint, fileContent):
         instrCnt += 1
 
     return instrCnt, swaps
+
+
+def gen_hash_list(binary, swaps, startaddr) -> list:
+    # Init locals
+    content = None
+    hashlist = []
+
+    # Open binary file and read until EOF
+    with open(binary, "rb") as bin:
+        content = bin.read()
+
+    # Generate original hash
+    hashlist.append(generate_MD5_hash(content))
+
+    # Generate possible swap contents
+    for swap in swaps:
+
+        # Make a clean copy of the file contents
+        tempContent = bytearray(content)
+
+        for bytesToSwap in swap["swaplist"]:
+            for idx in range(len(bytesToSwap)):
+                tempContent[startaddr + idx] = bytesToSwap[idx]
+
+            # Generate hash of swapped file contents
+            swapHash = generate_MD5_hash(tempContent)
+
+            # Append generated hash onto hashlist
+            hashlist.append(swapHash)
+
+    # Clear any duplicate hash values
+    hashlist = list(set(hashlist))
+
+    return hashlist
+
+
+def generate_MD5_hash(content):
+
+    # Split content into byteBlocks
+    BLOCKSIZE = 4096
+    byteBlocks = [content[i : i + BLOCKSIZE] for i in range(0, len(content), BLOCKSIZE)]
+
+    # Pack the file contents into hash generator
+    swapHash = md5()
+    for byteBlock in iter(byteBlocks):
+        swapHash.update(byteBlock)
+
+    # Generate hash and return
+    return swapHash.digest().hex()
