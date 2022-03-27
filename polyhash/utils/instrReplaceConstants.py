@@ -346,7 +346,17 @@ SWAPLIST_8_BYTES = [
     NOP4 + NOP1 + NOP3 + XXXX + XXXX + XXXX + XXXX + XXXX,
 ]
 
-INSTR_SET = [
+TARGET_INSTR_LIST = [
+    NOP2,
+    NOP3,
+    NOP4,
+    NOP5,
+    NOP6,
+    NOP7,
+    NOP8,
+]
+
+INSTR_SWAP_SETS = [
     {
         # Multi-byte NOP (2 bytes)
         "ORIG_INSTR": NOP2,
