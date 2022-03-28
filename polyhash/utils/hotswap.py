@@ -50,6 +50,19 @@ def gen_hash_list(binary, swaps, startaddr) -> list:
     # Generate original hash
     hashlist.append(generate_MD5_hash(content))
 
+    # Generate possible hashes
+    hashlist = hashlist + gen_swaps(content, swaps, startaddr)
+
+    # Clear any duplicate hash values
+    hashlist = list(set(hashlist))
+
+    return hashlist
+
+
+def gen_swaps(content, swaps, startaddr) -> list:
+    # Init locals
+    hashlist = []
+
     # Generate possible swap contents
     for swap in swaps:
 
@@ -63,11 +76,24 @@ def gen_hash_list(binary, swaps, startaddr) -> list:
             # Generate hash of swapped file contents
             swapHash = generate_MD5_hash(tempContent)
 
+            # Remove current swap from swaps list
+            print(f"SIZE OF SWAPS BEFORE --> {len(swaps)}")
+            if len(swaps) > 1:
+                tempSwaps = swaps
+                tempSwaps.remove(swap)
+                print(f"SIZE OF SWAPS AFTER ---> {len(tempSwaps)}")
+
+                # Recursive call to generate all possible swap combinations
+                hashlist = hashlist + gen_swaps(
+                    tempContent,
+                    tempSwaps,
+                    startaddr,
+                )
+            else:
+                print("DONE WITH SWAPS")
+
             # Append generated hash onto hashlist
             hashlist.append(swapHash)
-
-    # Clear any duplicate hash values
-    hashlist = list(set(hashlist))
 
     return hashlist
 
