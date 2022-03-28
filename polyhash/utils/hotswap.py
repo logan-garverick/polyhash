@@ -87,6 +87,7 @@ def gen_swaps(content, swaps, startaddr) -> list:
                 tempSwaps.remove(swap)
 
                 # Recursive call to generate all possible swap combinations
+                print(f"DEBUG: RECURSIVE CALL WITH --> {len(tempSwaps)} SWAPS")
                 hashlist += gen_swaps(
                     bytes(tempContent),
                     tempSwaps,

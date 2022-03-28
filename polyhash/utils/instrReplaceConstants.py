@@ -360,36 +360,37 @@ INSTR_SWAP_SETS = [
     {
         # Multi-byte NOP (2 bytes)
         "ORIG_INSTR": NOP2,
-        "SWAPS": SWAPLIST_2_BYTES,
+        # "SWAPS": SWAPLIST_2_BYTES.remove(NOP2),
+        "SWAPS": [x for x in SWAPLIST_2_BYTES if x != NOP2],
     },
     {
         # Multi-byte NOP (3 bytes)
         "ORIG_INSTR": NOP3,
-        "SWAPS": SWAPLIST_3_BYTES,
+        "SWAPS": [x for x in SWAPLIST_3_BYTES if x != NOP3],
     },
     {
         # Multi-byte NOP (4 bytes)
         "ORIG_INSTR": NOP4,
-        "SWAPS": SWAPLIST_4_BYTES,
+        "SWAPS": [x for x in SWAPLIST_4_BYTES if x != NOP4],
     },
     {
         # Multi-byte NOP (5 bytes)
         "ORIG_INSTR": NOP5,
-        "SWAPS": SWAPLIST_5_BYTES,
+        "SWAPS": [x for x in SWAPLIST_5_BYTES if x != NOP5],
     },
     {
         # Multi-byte NOP (6 bytes)
         "ORIG_INSTR": NOP6,
-        "SWAPS": SWAPLIST_6_BYTES,
+        "SWAPS": [x for x in SWAPLIST_6_BYTES if x != NOP6],
     },
     {
         # Multi-byte NOP (7 bytes)
         "ORIG_INSTR": NOP7,
-        "SWAPS": SWAPLIST_7_BYTES,
+        "SWAPS": [x for x in SWAPLIST_7_BYTES if x != NOP7],
     },
     {
         # Multi-byte NOP (8 bytes)
         "ORIG_INSTR": NOP8,
-        "SWAPS": SWAPLIST_8_BYTES,
+        "SWAPS": [x for x in SWAPLIST_8_BYTES if x != NOP8],
     },
 ]
