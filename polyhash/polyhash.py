@@ -82,26 +82,25 @@ def get_BinaryFile() -> BinaryFile:
         exit(1)
 
 
-def generate_hashtable_file(hashlist, outputFile, inputFile) -> None:
-    """Writes the generated hash table to the desired output file
+def generate_hotswap_file(swaplist, outputFile, inputFile) -> None:
 
-    Args:
-        hashlist (list): a list of possible hash values for the provided binary file
-        outputFile (str): the location to save the hash table
-        inputFile (str): the binary file that has been analyzed
-    """
-    with open(outputFile, "w+") as hashtable:
+    with open(outputFile, "w+") as swapfile:
         # Write the original hash to the file
-        hashtable.write(f"POSSIBLE POLYMORPHIC SIGNATURES FOR {inputFile}\n\n")
-        hashtable.write(f"ORIGINAL SIGNATURE:\t{hashlist[0]}\n\n")
+        swapfile.write(
+            f"THIS FILE LISTS POSSIBLE INSTRUCTION SWAPS FOR {inputFile}\n\n"
+        )
 
-        # Write all possible signatures if any
-        hashtable.write(f"POSSIBLE POLYMORPHIC SIGNATURES:\n")
-        if len(hashlist) > 1:
-            for signature in islice(hashlist, 1, len(hashlist)):
-                hashtable.write(f"\t{signature}\n")
+        # Write all possible swap locations and instructions, if any
+        swapfile.write(
+            f"| ----- OFFSET ----- | ---------- HOT SWAPPABLE BYTES ---------- |\n"
+        )
+        if len(swaplist) > 0:
+            for swap in swaplist:
+                swapfile.write("  {0:#0{1}x} \n".format(swap["offset"], 18))
+                for instr in swap["swaplist"]:
+                    swapfile.write("                       {}\n".format(instr.hex()))
         else:
-            hashtable.write(f"\tNO POLYMORPHIC SIGNATURES FOUND\n")
+            swapfile.write(f"\tNO HOT-SWAP LOCATIONS DETECTED.\n")
 
 
 def polyhash():
@@ -131,15 +130,8 @@ def polyhash():
             f"\t{colors.OKGREEN}LOG{colors.ENDC}: Polyhash detected {colors.BOLD}{len(swaplist)}{colors.ENDC} possible swap locations."
         )
 
-    # Generate list of possible polymorphic hashes
-    hashlist = gen_hash_list(binaryInfo["path"], swaplist, binaryInfo["start"])
-    if args.verbose:
-        print(
-            f"\t{colors.OKGREEN}LOG{colors.ENDC}: Polyhash generated {colors.BOLD}{len(hashlist)}{colors.ENDC} possible unique polymorphic hashes."
-        )
-
-    # Write generated hashes to output file
-    generate_hashtable_file(hashlist, args.output_path, args.binary)
+    # Write all possible hot-swap locations and instructions to output file
+    generate_hotswap_file(swaplist, args.output_path, args.binary)
 
 
 if __name__ == "__main__":
