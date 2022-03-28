@@ -78,24 +78,20 @@ def gen_swaps(content, swaps, startaddr) -> list:
             # Generate hash of swapped file contents
             swapHash = generate_MD5_hash(tempContent)
 
+            # Append generated hash onto hashlist
+            hashlist.append(swapHash)
+
             # Remove current swap from swaps list
-            print(f"SIZE OF SWAPS BEFORE --> {len(swaps)}")
             if len(swaps) > 1:
-                tempSwaps = swaps
+                tempSwaps = [] + swaps
                 tempSwaps.remove(swap)
-                print(f"SIZE OF SWAPS AFTER ---> {len(tempSwaps)}")
 
                 # Recursive call to generate all possible swap combinations
                 hashlist += gen_swaps(
-                    tempContent,
+                    bytes(tempContent),
                     tempSwaps,
                     startaddr,
                 )
-            else:
-                print("DONE WITH SWAPS")
-
-            # Append generated hash onto hashlist
-            hashlist.append(swapHash)
 
     return hashlist
 
