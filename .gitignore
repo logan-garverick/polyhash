@@ -134,3 +134,4 @@ examples/hello_elf32.polyhash
 examples/hello_elf64.polyhash
 examples/hello_pe32.polyhash
 examples/hello_pe32+.polyhash
+out.swaplist

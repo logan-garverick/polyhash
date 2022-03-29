@@ -27,7 +27,7 @@ def find_swaps(decoder, entrypoint, fileContent):
             # Create entry in list of possible swaps
             swaps.append(
                 {
-                    "offset": entrypoint + start_index,
+                    "offset": start_index,
                     "swaplist": swapset,
                 }
             )

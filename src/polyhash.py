@@ -10,7 +10,6 @@ from binaryfilefactory import *
 from bcolors import *
 from binaryfile import *
 from hotswap import *
-from itertools import islice
 from iced_x86 import *
 
 
@@ -27,10 +26,10 @@ def configure_parser():
         "-o",
         "--output",
         dest="output_path",
-        default="polyhash_table.txt",
+        default="out.swaplist",
         action="store",
         type=str,
-        help="path where the produced hash table should be stored (default: polyhash_table.txt)",
+        help="path where the produced swaplist file should be stored (default: out.swaplist)",
     )
     parser.add_argument(
         "-v",
@@ -137,7 +136,7 @@ def polyhash():
 if __name__ == "__main__":
     # Initialize parser object
     parser = argparse.ArgumentParser(
-        description="Analyze a binary file and produce a list of possible polymorphic signatures."
+        description="Analyze a binary file and produce a list of polymorphic instruction swaps."
     )
     configure_parser()
     args = parser.parse_args()

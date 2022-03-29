@@ -3,9 +3,6 @@
 # Install required python modules
 pip3 install -r requirements.txt
 
-# Install PyInstaller
-pip3 install pyinstaller
-
 # Run PyInstaller to create 
 pyinstaller -F --clean --paths src/ --distpath ./ src/polyhash.py
 rm -r ./build
