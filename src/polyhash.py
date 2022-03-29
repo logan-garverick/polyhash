@@ -6,10 +6,10 @@ Description: This will be the main execution file to accept and parse command
 
 import argparse
 from os.path import exists
-from utils.binaryfilefactory import *
-from utils.bcolors import *
-from utils.binaryfile import *
-from utils.hotswap import *
+from binaryfilefactory import *
+from bcolors import *
+from binaryfile import *
+from hotswap import *
 from itertools import islice
 from iced_x86 import *
 

@@ -9,7 +9,7 @@
             "type": "python",
             "python": "${workspaceFolder}/.venv/bin/python",
             "request": "launch",
-            "program": "${workspaceFolder}/polyhash/polyhash.py",
+            "program": "${workspaceFolder}/src/polyhash.py",
             "console": "integratedTerminal",
             "args": [
                 "-v",
@@ -24,7 +24,7 @@
             "type": "python",
             "python": "${workspaceFolder}/.venv/bin/python",
             "request": "launch",
-            "program": "${workspaceFolder}/polyhash/polyhash.py",
+            "program": "${workspaceFolder}/src/polyhash.py",
             "console": "integratedTerminal",
             "args": [
                 "-v",
@@ -39,7 +39,7 @@
             "type": "python",
             "python": "${workspaceFolder}/.venv/bin/python",
             "request": "launch",
-            "program": "${workspaceFolder}/polyhash/polyhash.py",
+            "program": "${workspaceFolder}/src/polyhash.py",
             "console": "integratedTerminal",
             "args": [
                 "-v",
@@ -54,7 +54,7 @@
             "type": "python",
             "python": "${workspaceFolder}/.venv/bin/python",
             "request": "launch",
-            "program": "${workspaceFolder}/polyhash/polyhash.py",
+            "program": "${workspaceFolder}/src/polyhash.py",
             "console": "integratedTerminal",
             "args": [
                 "-v",
