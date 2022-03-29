@@ -2,8 +2,8 @@
 Description: This file defines the ELF class inheriting from the BinaryFile class.
 """
 
-from utils.fileFormatConstants import *
-from utils.binaryfile import BinaryFile
+from fileFormatConstants import *
+from binaryfile import BinaryFile
 import struct
 
 

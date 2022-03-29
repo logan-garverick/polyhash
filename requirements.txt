@@ -1,8 +1,11 @@
+altgraph==0.17.2
 black==22.1.0
 click==8.0.4
 iced-x86==1.17.0
 mypy-extensions==0.4.3
 pathspec==0.9.0
 platformdirs==2.5.1
+pyinstaller==4.10
+pyinstaller-hooks-contrib==2022.3
 tomli==2.0.1
 typing-extensions==4.1.1

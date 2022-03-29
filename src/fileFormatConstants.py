@@ -3,7 +3,7 @@ Description: This file defines the constant values used by the BinaryFileFactory
              to parse binary files for information.
 """
 
-from utils.binaryfile import *
+from binaryfile import *
 
 FILE_FORMAT_INFO = [
     {

@@ -1,7 +1,7 @@
 """
 Description: This will be the definitions of the instruction hot-swapping functionality.
 """
-from utils.instrReplaceConstants import *
+from instrReplaceConstants import *
 from hashlib import md5
 from iced_x86 import *
 
@@ -27,7 +27,7 @@ def find_swaps(decoder, entrypoint, fileContent):
             # Create entry in list of possible swaps
             swaps.append(
                 {
-                    "offset": entrypoint + start_index,
+                    "offset": start_index,
                     "swaplist": swapset,
                 }
             )

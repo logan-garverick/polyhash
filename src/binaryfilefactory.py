@@ -4,10 +4,10 @@ Description: This file defines the BinaryFileFactory class and its associated me
 """
 
 from abc import ABC
-from utils.binaryfile import BinaryFile
-from utils.elf import ELF
-from utils.pe import PE
-from utils.fileFormatConstants import *
+from binaryfile import BinaryFile
+from elf import ELF
+from pe import PE
+from fileFormatConstants import *
 
 
 class BinaryFileFactory(ABC):
