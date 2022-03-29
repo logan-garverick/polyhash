@@ -120,7 +120,9 @@ def polyhash():
     decoder = Decoder(binaryInfo["bitness"], fileContent, ip=binaryInfo["virtualstart"])
 
     # Attempt to find a list of hot-swappable instructions
-    (instrcnt, swaplist) = find_swaps(decoder, binaryInfo["entrypoint"], fileContent)
+    (instrcnt, swaplist) = find_swaps(
+        decoder, binaryInfo["entrypoint"], fileContent, binaryInfo["start"]
+    )
     if args.verbose:
         print(
             f"\t{colors.OKGREEN}LOG{colors.ENDC}: Polyhash detected {colors.BOLD}{instrcnt}{colors.ENDC} instructions in the binary's text segment."
