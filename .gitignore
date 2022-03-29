@@ -32,6 +32,7 @@ MANIFEST
 #  before PyInstaller builds the exe, so as to inject date/other infos into it.
 *.manifest
 *.spec
+polyhash
 
 # Installer logs
 pip-log.txt
@@ -101,14 +102,14 @@ celerybeat.pid
 # SageMath parsed files
 *.sage.py
 
-# Environments
-.env
-.venv
-env/
-venv/
-ENV/
-env.bak/
-venv.bak/
+# # Environments
+# .env
+# .venv
+# env/
+# venv/
+# ENV/
+# env.bak/
+# venv.bak/
 
 # Spyder project settings
 .spyderproject
@@ -127,3 +128,10 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Devemopment testing output files
+examples/hello_elf32.polyhash
+examples/hello_elf64.polyhash
+examples/hello_pe32.polyhash
+examples/hello_pe32+.polyhash
+out.swaplist
